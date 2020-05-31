@@ -16,10 +16,10 @@
 #
 
 module_device() {
-	if [ "$(tg_get_command_arguments "$@")" != "" ]; then
-		DEVICE_CODENAME="$(tg_get_command_arguments "$@")"
-		REVENGEOS_GENERIC_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/maintainers.json | jq .)"
-		REVENGEOS_DEVICE_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/$DEVICE_CODENAME/device.json | jq .)"
+	DEVICE_CODENAME="$(tg_get_command_arguments "$@" | sed 's/[^0-9a-zA-Z_-]*//g')"
+	REVENGEOS_GENERIC_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/maintainers.json | jq .)"
+	REVENGEOS_DEVICE_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/$DEVICE_CODENAME/device.json | jq .)"
+	if [ "$DEVICE_CODENAME" != "" ]; then
 		if [ "$(echo "$REVENGEOS_GENERIC_JSON" | jq ".$DEVICE_CODENAME")" != "null" ]; then
 			REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
 
