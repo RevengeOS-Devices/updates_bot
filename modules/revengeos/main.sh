@@ -16,7 +16,7 @@
 #
 
 parse_ota() {
-	REVENGEOS_GENERIC_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/maintainers.json | jq .)"
+	local REVENGEOS_GENERIC_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/maintainers.json | jq .)"
 	if echo "$1" | grep -q "-"; then
 		echo "$REVENGEOS_GENERIC_JSON" | jq '.["$1"]'
 	else
@@ -26,35 +26,35 @@ parse_ota() {
 
 module_device() {
 	# Trim codename
-	DEVICE_CODENAME="$(tg_get_command_arguments "$@" | sed 's/[^0-9a-zA-Z_-]*//g')"
+	local DEVICE_CODENAME="$(tg_get_command_arguments "$@" | sed 's/[^0-9a-zA-Z_-]*//g')"
 	if [ "$DEVICE_CODENAME" != "" ]; then
-		REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
+		local REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
 		if [ "$REVENGEOS_DEVICE_JSON" = "null" ]; then
 			# Try lowercase codename
-			DEVICE_CODENAME=$(echo $DEVICE_CODENAME | tr '[:upper:]' '[:lower:]')
-			REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
+			local DEVICE_CODENAME=$(echo $DEVICE_CODENAME | tr '[:upper:]' '[:lower:]')
+			local REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
 		fi
 		if [ "$REVENGEOS_DEVICE_JSON" = "null" ]; then
 			# Try uppercase codename
-			DEVICE_CODENAME=$(echo $DEVICE_CODENAME | tr '[:lower:]' '[:upper:]')
-			REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
+			local DEVICE_CODENAME=$(echo $DEVICE_CODENAME | tr '[:lower:]' '[:upper:]')
+			local REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
 		fi
 		REVENGEOS_DEVICE_UPDATE_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/$DEVICE_CODENAME/device.json | jq .)"
 		if [ "$REVENGEOS_DEVICE_JSON" != "null" ] && [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".filename" | cut -d "\"" -f 2)" != "" ]; then
-			REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
+			local REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
 
 Name: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".name" | cut -d "\"" -f 2)
 Mantainer: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".maintainer" | cut -d "\"" -f 2)
 Latest version: [$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".filename" | cut -d "\"" -f 2)]($(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".url" | cut -d "\"" -f 2))"
 			if [ "$(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2)" != "" ]; then
-				REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+				local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
 XDA thread: [Here]($(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2))"
 			fi
 			if [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".donate_url" | cut -d "\"" -f 2)" != "" ]; then
-				REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+				local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
 Donate: [Here]($(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".donate_url" | cut -d "\"" -f 2))"
 			else
-				REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+				local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
 Donate: [Here](https://paypal.me/lucchetto)"
 			fi
 			tg_send_message "$(tg_get_chat_id "$@")" "$REVENGEOS_DEVICE_INFO" "$(tg_get_message_id "$@")"
