@@ -66,3 +66,18 @@ Please make sure you wrote it correctly" "$(tg_get_message_id "$@")"
 		tg_send_message "$(tg_get_chat_id "$@")" "Please write a device codename!" "$(tg_get_message_id "$@")"
 	fi
 }
+
+module_devices() {
+	local REVENGEOS_GENERIC_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/maintainers.json | jq .)"
+	local REVENGEOS_DEVICES_LIST="$(echo "$REVENGEOS_GENERIC_JSON" | jq 'to_entries | .[].key' | cut -d "\"" -f 2)"
+	local REVENGEOS_DEVICES_MESSAGE="List of RevengeOS official supported devices:
+"
+	for device in $(echo "$REVENGEOS_DEVICES_LIST"); do
+		local REVENGEOS_DEVICES_MESSAGE="$REVENGEOS_DEVICES_MESSAGE
+$(echo $REVENGEOS_GENERIC_JSON | jq ".$device.name" | cut -d "\"" -f 2)  (\`$device\`)"
+	done
+	local REVENGEOS_DEVICES_MESSAGE="$REVENGEOS_DEVICES_MESSAGE
+	
+To get the last release for a device type /device <codename>"
+	tg_send_message "$(tg_get_chat_id "$@")" "$REVENGEOS_DEVICES_MESSAGE" "$(tg_get_message_id "$@")"
+}
