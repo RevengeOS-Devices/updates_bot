@@ -39,8 +39,8 @@ module_device() {
 			DEVICE_CODENAME=$(echo $DEVICE_CODENAME | tr '[:lower:]' '[:upper:]')
 			REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
 		fi
-		if [ "$REVENGEOS_DEVICE_JSON" != "null" ]; then
-			REVENGEOS_DEVICE_UPDATE_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/$DEVICE_CODENAME/device.json | jq .)"
+		REVENGEOS_DEVICE_UPDATE_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/$DEVICE_CODENAME/device.json | jq .)"
+		if [ "$REVENGEOS_DEVICE_JSON" != "null" ] && [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".filename" | cut -d "\"" -f 2)" != "" ]; then
 			REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
 
 Name: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".name" | cut -d "\"" -f 2)
