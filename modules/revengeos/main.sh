@@ -40,24 +40,29 @@ module_device() {
 			local REVENGEOS_DEVICE_JSON=$(parse_ota "$DEVICE_CODENAME")
 		fi
 		REVENGEOS_DEVICE_UPDATE_JSON="$(curl https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/$DEVICE_CODENAME/device.json | jq .)"
-		if [ "$REVENGEOS_DEVICE_JSON" != "null" ] && [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".filename" | cut -d "\"" -f 2)" != "" ]; then
-			local REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
+		if [ "$REVENGEOS_DEVICE_JSON" != "null" ]; then
+			if [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".filename" | cut -d "\"" -f 2)" != "" ]; then
+				local REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
 
 Name: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".name" | cut -d "\"" -f 2)
 Mantainer: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".maintainer" | cut -d "\"" -f 2)
 Latest version: [$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".filename" | cut -d "\"" -f 2)]($(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".url" | cut -d "\"" -f 2))"
-			if [ "$(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2)" != "" ]; then
-				local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+				if [ "$(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2)" != "" ]; then
+					local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
 XDA thread: [Here]($(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2))"
-			fi
-			if [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".donate_url" | cut -d "\"" -f 2)" != "" ]; then
-				local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+				fi
+				if [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".donate_url" | cut -d "\"" -f 2)" != "" ]; then
+					local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
 Donate: [Here]($(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".donate_url" | cut -d "\"" -f 2))"
-			else
-				local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+				else
+					local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
 Donate: [Here](https://paypal.me/lucchetto)"
+				fi
+				tg_send_message "$(tg_get_chat_id "$@")" "$REVENGEOS_DEVICE_INFO" "$(tg_get_message_id "$@")"
+			else
+				tg_send_message "$(tg_get_chat_id "$@")" "Device is present in official devices list, but no release has been found!
+Please check updates in RevengeOS updates channel" "$(tg_get_message_id "$@")"
 			fi
-			tg_send_message "$(tg_get_chat_id "$@")" "$REVENGEOS_DEVICE_INFO" "$(tg_get_message_id "$@")"
 		else
 			tg_send_message "$(tg_get_chat_id "$@")" "Device codename is not present in RevengeOS official devices list!
 Please make sure you wrote it correctly" "$(tg_get_message_id "$@")"
