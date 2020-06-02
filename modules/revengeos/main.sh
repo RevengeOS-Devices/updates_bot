@@ -59,10 +59,10 @@ Donate: [Here](https://paypal.me/lucchetto)"
 			fi
 			tg_send_message "$(tg_get_chat_id "$@")" "$REVENGEOS_DEVICE_INFO" "$(tg_get_message_id "$@")"
 		else
-			tg_send_message "$(tg_get_chat_id "$@")" "Error: device codename is not present in RevengeOS official devices list!
+			tg_send_message "$(tg_get_chat_id "$@")" "Device codename is not present in RevengeOS official devices list!
 Please make sure you wrote it correctly" "$(tg_get_message_id "$@")"
 		fi
 	else
-		tg_send_message "$(tg_get_chat_id "$@")" "Error: please write a device codename!" "$(tg_get_message_id "$@")"
+		tg_send_message "$(tg_get_chat_id "$@")" "Please write a device codename!" "$(tg_get_message_id "$@")"
 	fi
 }
