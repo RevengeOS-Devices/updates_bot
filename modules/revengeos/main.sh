@@ -68,7 +68,8 @@ Please check updates in RevengeOS updates channel" "$(tg_get_message_id "$@")"
 Please make sure you wrote it correctly" "$(tg_get_message_id "$@")"
 		fi
 	else
-		tg_send_message "$(tg_get_chat_id "$@")" "Please write a device codename!" "$(tg_get_message_id "$@")"
+		tg_send_message "$(tg_get_chat_id "$@")" "Write a device codename after the command!
+Example: /device whyred" "$(tg_get_message_id "$@")"
 	fi
 }
 
