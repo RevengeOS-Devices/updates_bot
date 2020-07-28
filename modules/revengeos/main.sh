@@ -60,8 +60,23 @@ Donate: [Here](https://paypal.me/lucchetto)"
 				fi
 				tg_send_message "$(tg_get_chat_id "$@")" "$REVENGEOS_DEVICE_INFO" "$(tg_get_message_id "$@")"
 			else
-				tg_send_message "$(tg_get_chat_id "$@")" "Device is present in official devices list, but no release has been found!
-Please check updates in RevengeOS updates channel" "$(tg_get_message_id "$@")"
+				local REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
+
+Name: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".name" | cut -d "\"" -f 2)
+Maintainer: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".maintainer" | cut -d "\"" -f 2)
+Latest version: No release has been found! Ask the maintainer to release one or search in releases channel"
+				if [ "$(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2)" != "" ]; then
+					local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+XDA thread: [Here]($(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2))"
+				fi
+				if [ "$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".donate_url" | cut -d "\"" -f 2)" != "" ]; then
+					local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+Donate: [Here]($(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".donate_url" | cut -d "\"" -f 2))"
+				else
+					local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
+Donate: [Here](https://paypal.me/lucchetto)"
+				fi
+				tg_send_message "$(tg_get_chat_id "$@")" "$REVENGEOS_DEVICE_INFO" "$(tg_get_message_id "$@")"
 			fi
 		else
 			tg_send_message "$(tg_get_chat_id "$@")" "Device codename is not present in RevengeOS official devices list!
