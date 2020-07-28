@@ -45,7 +45,7 @@ module_device() {
 				local REVENGEOS_DEVICE_INFO="RevengeOS Q build for $DEVICE_CODENAME
 
 Name: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".name" | cut -d "\"" -f 2)
-Mantainer: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".maintainer" | cut -d "\"" -f 2)
+Maintainer: $(echo "$REVENGEOS_DEVICE_JSON" | jq ".maintainer" | cut -d "\"" -f 2)
 Latest version: [$(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".filename" | cut -d "\"" -f 2)]($(echo "$REVENGEOS_DEVICE_UPDATE_JSON" | jq ".url" | cut -d "\"" -f 2 | sed -r 's/&+/%26/g'))"
 				if [ "$(echo "$REVENGEOS_DEVICE_JSON" | jq ".xda_thread" | cut -d "\"" -f 2)" != "" ]; then
 					local REVENGEOS_DEVICE_INFO="$REVENGEOS_DEVICE_INFO
