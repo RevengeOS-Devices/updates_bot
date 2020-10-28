@@ -65,6 +65,11 @@ def device(update, context):
 		return
 
 	try:
+		release_date = datetime.utcfromtimestamp(device_specific_json["datetime"]).strftime('%Y-%m-%d')
+	except ValueError:
+		release_date = datetime.utcfromtimestamp(device_specific_json["datetime"] / 1000).strftime('%Y-%m-%d')
+
+	try:
 		update.message.reply_text('RevengeOS Q build for {}\n\n'.format(device) + \
 								  'Name: {} {}\n'.format(device_info["brand"], device_info["name"]) + \
 								  'Maintainer: {}\n'.format(device_info["maintainer"]) + \
@@ -72,8 +77,7 @@ def device(update, context):
 								  'Latest version: <a href="{}">{}</a>\n'.format(device_specific_json["url"],
 																			     device_specific_json["filename"]) + \
 								  'Version: {}\n'.format(device_specific_json["version"]) + \
-								  'Date: {}\n'.format(datetime.utcfromtimestamp(device_specific_json["datetime"])
-								  					  .strftime('%Y-%m-%d')),
+								  'Date: {}\n'.format(release_date),
 								  parse_mode="HTML", disable_web_page_preview=True)
 	except KeyError:
 		update.message.reply_text("Error: Update message creation failed, please ask the maintainer to fix this")
