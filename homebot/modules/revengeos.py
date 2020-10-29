@@ -6,8 +6,8 @@ from homebot.modules_manager import register
 from datetime import datetime
 import requests
 
-DEVICES_JSON_URL = "https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/maintainers.json"
-DEVICE_SPECIFIC_JSON_URL = "https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/r10.0/{}/device.json"
+DEVICES_JSON_URL = "https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/master/maintainers.json"
+DEVICE_SPECIFIC_JSON_URL = "https://raw.githubusercontent.com/RevengeOS-Devices/official_devices/master/{}/device.json"
 DEFAULT_DONATION_LINK = "https://paypal.me/lucchetto"
 
 def get_devices_json():
