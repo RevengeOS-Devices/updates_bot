@@ -59,6 +59,19 @@ def device(update, context):
 								  "Please make sure you wrote it correctly")
 		return
 
+	try:
+		device_redirect = device_info["redirect_to"]
+	except KeyError:
+		pass
+	else:
+		update.message.reply_text('RevengeOS build for {}\n\n'.format(device) + \
+								  'Name: {} {}\n'.format(device_info["brand"], device_info["name"]) + \
+								  '\n' + \
+								  'This device is unified with {}, to get RevengeOS for this phone type:\n'.format(device_redirect) + \
+								  '/device {}\n'.format(device_redirect),
+								  parse_mode="HTML", disable_web_page_preview=True)
+		return
+
 	device_specific_json = get_device_specific_json(device)
 	if device_specific_json is None:
 		update.message.reply_text("Error: Device OTA JSON fetching failed, retry later")
