@@ -70,7 +70,7 @@ def device(update, context):
 		release_date = datetime.utcfromtimestamp(device_specific_json["datetime"] / 1000).strftime('%Y-%m-%d')
 
 	try:
-		update.message.reply_text('RevengeOS Q build for {}\n\n'.format(device) + \
+		update.message.reply_text('RevengeOS build for {}\n\n'.format(device) + \
 								  'Name: {} {}\n'.format(device_info["brand"], device_info["name"]) + \
 								  'Maintainer: {}\n'.format(device_info["maintainer"]) + \
 								  'Donate: <a href="{}">Here</a>\n\n'.format(device_specific_json["donate_url"]) + \
