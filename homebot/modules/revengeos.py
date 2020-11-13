@@ -87,13 +87,24 @@ def device(update, context):
 								  'Name: {} {}\n'.format(device_info["brand"], device_info["name"]) + \
 								  'Maintainer: {}\n'.format(device_info["maintainer"]) + \
 								  'Donate: <a href="{}">Here</a>\n\n'.format(device_specific_json["donate_url"]) + \
-								  'Latest version: <a href="{}">{}</a>\n'.format(device_specific_json["url"],
-																			     device_specific_json["filename"]) + \
+								  'Latest version: <a href="{}">{}</a>\n'.format(device_specific_json["download_new"],
+														device_specific_json["filename"]) + \
 								  'Version: {}\n'.format(device_specific_json["version"]) + \
 								  'Date: {}\n'.format(release_date),
 								  parse_mode="HTML", disable_web_page_preview=True)
 	except KeyError:
-		update.message.reply_text("Error: Update message creation failed, please ask the maintainer to fix this")
+		try:
+			update.message.reply_text('RevengeOS build for {}\n\n'.format(device) + \
+									  'Name: {} {}\n'.format(device_info["brand"], device_info["name"]) + \
+									  'Maintainer: {}\n'.format(device_info["maintainer"]) + \
+									  'Donate: <a href="{}">Here</a>\n\n'.format(device_specific_json["donate_url"]) + \
+									  'Latest version: <a href="{}">{}</a>\n'.format(device_specific_json["url"],
+															device_specific_json["filename"]) + \
+									  'Version: {}\n'.format(device_specific_json["version"]) + \
+									  'Date: {}\n'.format(release_date),
+									  parse_mode="HTML", disable_web_page_preview=True)
+		except KeyError:
+			update.message.reply_text("Error: Update message creation failed, please ask the maintainer to fix this")
 
 @register(commands=['devices'])
 def devices(update, context):
